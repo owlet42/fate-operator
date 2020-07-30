@@ -27,11 +27,10 @@ type KubefateSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	Image              string              `json:"image,omitempty"`
-	IngressDomain      string              `json:"ingressDomain,omitempty"`
-	ServiceAccountName string              `json:"serviceAccountName,omitempty"`
-	VolumeSource       corev1.VolumeSource `json:"volumeSource,omitempty"`
-	Config             []corev1.EnvVar     `json:"config,omitempty"`
+	ImageVersion       string          `json:"imageVersion,omitempty"`
+	IngressDomain      string          `json:"ingressHost,omitempty"`
+	ServiceAccountName string          `json:"serviceAccountName,omitempty"`
+	Config             []corev1.EnvVar `json:"config,omitempty"`
 }
 
 const (
@@ -61,7 +60,7 @@ type KubefateStatus struct {
 }
 
 // +kubebuilder:object:root=true
-// +kubebuilder:printcolumn:name="IngressDomain",type=string,JSONPath=`.spec.ingressDomain`
+// +kubebuilder:printcolumn:name="IngressDomain",type=string,JSONPath=`.spec.ingressHost`
 // +kubebuilder:printcolumn:name="status",type=string,JSONPath=`.status.status`
 
 // Kubefate is the Schema for the kubefates API

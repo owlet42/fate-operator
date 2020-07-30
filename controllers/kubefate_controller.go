@@ -222,9 +222,11 @@ func NewKubefate(kubefate *appv1beta1.Kubefate) *Kubefate {
 		name = randomStringWithCharset(10, charset)
 	}
 
-	var image = kubefate.Spec.Image
-	if kubefate.Spec.Image == "" {
+	var image = kubefate.Spec.ImageVersion
+	if kubefate.Spec.ImageVersion == "" {
 		image = "federatedai/kubefate:v1.0.3"
+	} else {
+		image = "federatedai/kubefate:" + kubefate.Spec.ImageVersion
 	}
 
 	for _, v := range []string{"FATECLOUD_MONGO_USERNAME", "FATECLOUD_MONGO_PASSWORD", "FATECLOUD_USER_USERNAME", "FATECLOUD_USER_PASSWORD"} {
@@ -262,8 +264,9 @@ func NewKubefate(kubefate *appv1beta1.Kubefate) *Kubefate {
 					ServiceAccountName: kubefate.Spec.ServiceAccountName,
 					Containers: []corev1.Container{
 						{
-							Name:  "kubefate",
-							Image: fmt.Sprintf("%s", image),
+							Name:            "kubefate",
+							Image:           fmt.Sprintf("%s", image),
+							ImagePullPolicy: corev1.PullIfNotPresent,
 							Ports: []corev1.ContainerPort{
 								{ContainerPort: 8080},
 							},
@@ -298,8 +301,9 @@ func NewKubefate(kubefate *appv1beta1.Kubefate) *Kubefate {
 				Spec: corev1.PodSpec{
 					Containers: []corev1.Container{
 						{
-							Name:  "mongo",
-							Image: "mongo",
+							Name:            "mongo",
+							Image:           "mongo",
+							ImagePullPolicy: corev1.PullIfNotPresent,
 							Ports: []corev1.ContainerPort{
 								{ContainerPort: 27017},
 							},
@@ -325,8 +329,15 @@ func NewKubefate(kubefate *appv1beta1.Kubefate) *Kubefate {
 					},
 					Volumes: []corev1.Volume{
 						{
-							Name:         "mongo-data",
-							VolumeSource: kubefate.Spec.VolumeSource,
+							Name: "mongo-data",
+							VolumeSource: func() corev1.VolumeSource {
+								return corev1.VolumeSource{
+									HostPath: &corev1.HostPathVolumeSource{
+										Path: "/home/kubefate/mongodb/db",
+										Type: func() *corev1.HostPathType { hostPathType := corev1.HostPathDirectoryOrCreate; return &hostPathType }(),
+									},
+								}
+							}(),
 						},
 					},
 				},

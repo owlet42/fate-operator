@@ -504,5 +504,11 @@ func (r *FateClusterReconciler) cleanNamespace(namespace string) error {
 		log.Error(err, "Deleting configMap")
 		return err
 	}
+	log.Info("Deleting persistentVolumeClaim")
+	err = r.DeleteAllOf(ctx, &corev1.PersistentVolumeClaim{}, client.InNamespace(namespace))
+	if err != nil {
+		log.Error(err, "Deleting persistentVolumeClaim")
+		return err
+	}
 	return nil
 }

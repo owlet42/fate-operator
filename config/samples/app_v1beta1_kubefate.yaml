@@ -7,14 +7,10 @@ spec:
   # kubefate image tag
   image: federatedai/kubefate:v1.0.3
   # ingress host
-  ingressDomain: kubefate.net
+  ingressHost: kubefate.net
   # serviceAccountName
   serviceAccountName: kubefate-admin
   # kubefate config
-  volumeSource:
-    hostPath:
-      path: /home/kubefate/mongodb/db
-      type: DirectoryOrCreate
   config:
     - name: FATECLOUD_MONGO_USERNAME
       valueFrom:
