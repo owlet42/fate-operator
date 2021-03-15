@@ -262,8 +262,7 @@ func CreateFateJob(fateJobCR *appv1beta1.FateJob) *batchv1.Job {
 								"/bin/bash",
 								"-c",
 								`   set -eux;
-                                    source /data/projects/python/venv/bin/activate;
-                                    python job.py '` + fateJobCR.Spec.JobConf.Pipeline + "' '" + fateJobCR.Spec.JobConf.ModulesConf + `'
+                                    python job.py --dsl='` + fateJobCR.Spec.JobConf.Pipeline + "' --config='" + fateJobCR.Spec.JobConf.ModulesConf + `'
                                 `,
 							},
 							Env: []corev1.EnvVar{

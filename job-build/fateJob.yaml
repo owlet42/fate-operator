@@ -20,13 +20,13 @@ spec:
         - -c
         - |
            set -eux;
-           python job.py '{
+           python job.py --dsl='{
                 "components": {
                   "secure_add_example_0": {
                     "module": "SecureAddExample"
                   }
                 }
-              }' '{
+              }' --config='{
                     "initiator": {
                       "role": "guest",
                       "party_id": 9999
