@@ -11,55 +11,58 @@ spec:
       containers:
       - name: fatejob-toy
         image: federatedai/job:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: FateFlowServer
+          value: fateflow-client:9380
         command: 
         - /bin/bash
         - -c
         - |
            set -eux;
-           source /data/projects/python/venv/bin/activate;
            python job.py '{
-        "components": {
-          "secure_add_example_0": {
-            "module": "SecureAddExample"
-          }
-        }
-      }' '{
-        "initiator": {
-          "role": "guest",
-          "party_id": 9999
-        },
-        "job_parameters": {
-          "work_mode": 1
-        },
-        "role": {
-          "guest": [
-            9999
-          ],
-          "host": [
-            9999
-          ]
-        },
-        "role_parameters": {
-          "guest": {
-            "secure_add_example_0": {
-              "seed": [
-                123
-              ]
-            }
-          },
-          "host": {
-            "secure_add_example_0": {
-              "seed": [
-                321
-              ]
-            }
-          }
-        },
-        "algorithm_parameters": {
-          "secure_add_example_0": {
-            "partition": 10,
-            "data_num": 1000
-          }
-        }
-      }'
+                "components": {
+                  "secure_add_example_0": {
+                    "module": "SecureAddExample"
+                  }
+                }
+              }' '{
+                    "initiator": {
+                      "role": "guest",
+                      "party_id": 9999
+                    },
+                    "job_parameters": {
+                      "work_mode": 1
+                    },
+                    "role": {
+                      "guest": [
+                        9999
+                      ],
+                      "host": [
+                        9999
+                      ]
+                    },
+                    "role_parameters": {
+                      "guest": {
+                        "secure_add_example_0": {
+                          "seed": [
+                            123
+                          ]
+                        }
+                      },
+                      "host": {
+                        "secure_add_example_0": {
+                          "seed": [
+                            321
+                          ]
+                        }
+                      }
+                    },
+                    "algorithm_parameters": {
+                      "secure_add_example_0": {
+                        "partition": 10,
+                        "data_num": 1000
+                      }
+                    }
+                  }'
       restartPolicy: Never
