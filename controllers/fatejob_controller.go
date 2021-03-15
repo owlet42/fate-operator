@@ -160,7 +160,7 @@ func (r *FateJobReconciler) Apply(fateJobCR *appv1beta1.FateJob) (bool, error) {
 
 	fateJobGot := NewFateJob()
 	err := r.Get(ctx, client.ObjectKey{
-		Namespace: fateJobCR.Spec.FateClusterRef.Namespace,
+		Namespace: fateJobCR.Namespace,
 		Name:      fateJobCR.Name,
 	}, fateJobGot)
 	if err != nil {
@@ -242,7 +242,7 @@ func CreateFateJob(fateJobCR *appv1beta1.FateJob) *batchv1.Job {
 	return &batchv1.Job{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      fateJobCR.Name,
-			Namespace: fateJobCR.Spec.FateClusterRef.Namespace,
+			Namespace: fateJobCR.Namespace,
 			Labels:    map[string]string{"fate": "kubefate", "apps": "fateJob", "deployer": "fate-operator", "name": fateJobCR.Name},
 		},
 		Spec: batchv1.JobSpec{
@@ -266,7 +266,7 @@ func CreateFateJob(fateJobCR *appv1beta1.FateJob) *batchv1.Job {
                                 `,
 							},
 							Env: []corev1.EnvVar{
-								{Name: "FateFlowServer", Value: fateJobCR.Spec.FateFlowServer},
+								{Name: "FateFlowServer", Value: "fateflow." + fateJobCR.Spec.FateClusterRef.Namespace + ":9380"},
 							},
 						},
 					},

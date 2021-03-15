@@ -6,7 +6,6 @@ metadata:
 spec:
   # Add fields here
   image: "federatedai/job:1.5.1-release"
-  fateFlowServer: "fateflow.fate-9999:9380"
   fateClusterRef:
     name: fatecluster-sample
     namespace: fate-9999
